@@ -32,7 +32,6 @@ router.get('/regexp', async (ctx, next) => {
     await ctx.response.redirect('/mockapi/regexp?regexp=');
   } else {
     regstr = regstr.match(/^\/(.*)\/([igm]?)$/)
-    console.log(regstr[1])
     ctx.body = regstr ? Mock.mock({
       'regexp': RegExp(regstr[1], regstr[2])
     }) : {
