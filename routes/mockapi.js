@@ -1,17 +1,13 @@
 const router = require('koa-router')()
 const Mock = require('mockjs')
-var data = Mock.mock({
-  'list|1-10': [{
-    'id|+1': 1
-  }]
-})
 
 router.prefix('/mockapi')
 
 router.get('/', async (ctx, next) => {
   await ctx.render(
     'mockapi', {
-      title: 'Hello Koa 2!'
+      title: 'mockapi',
+      location: ctx.host
     }
   )
 })
@@ -36,6 +32,7 @@ router.get('/regexp', async (ctx, next) => {
     await ctx.response.redirect('/mockapi/regexp?regexp=');
   } else {
     regstr = regstr.match(/^\/(.*)\/([igm]?)$/)
+    console.log(regstr[1])
     ctx.body = regstr ? Mock.mock({
       'regexp': RegExp(regstr[1], regstr[2])
     }) : {
@@ -44,9 +41,94 @@ router.get('/regexp', async (ctx, next) => {
   }
 })
 
-router.get('/json', async (ctx, next) => {
+router.get('/people', async (ctx, next) => {
+  ctx.body = Mock.mock({
+    'peoples|500': [{
+      'id|+1': 1,
+      'guid': '@guid',
+      'name': '@cname',
+      'age': '@integer(20, 50)',
+      'birthday': '@date("MM-dd")',
+      'address': '@county(true)',
+      'email': '@email',
+    }]
+  });
+})
+
+router.get('/dataImage', async (ctx, next) => {
+  let n = isNaN(Math.floor(ctx.query['amount'])) ? 20 : Math.floor(ctx.query['amount'])
+  n = Math.min(Math.max(1, n), 500)
   ctx.body = {
-    title: 'koa2 json'
+    "list": Array(n).fill().map((_, index) => {
+      return {
+        'id': index + 1,
+        'data': Mock.Random.dataImage()
+      }
+    })
+  }
+})
+
+router.get('/image', async (ctx, next) => {
+  let n = isNaN(Math.floor(ctx.query['amount'])) ? 2000 : Math.floor(ctx.query['amount'])
+  n = Math.min(Math.max(1, n), 5000)
+  ctx.body = {
+    "list": Array(n).fill().map((_, index) => {
+      return {
+        'id': index + 1,
+        'data': Mock.Random.image()
+      }
+    })
+  }
+})
+
+router.get('/basicData', async (ctx, next) => {
+  ctx.body = Mock.mock({
+    'list|500': [{
+      'id|+1': 1,
+      'isBoolean': '@boolean(10, 0, true)', //百分之百的true
+      'naturalNumber': '@natural(1, 1000)', //大于等于零的整数
+      'integer': '@integer(0)', //随机整数
+      'float': '@float(1, 100, 3, 6)', //随机浮点数, 
+      'character': '@character("upper")', //一个随机字符
+      'string': '@string("lower", 5, 20)', //一串随机字符串
+      'range': '@range(1, 10, 2)', //一个整形数组，步长为2
+    }]
+  });
+})
+
+router.get('/complexData', async (ctx, next) => {
+  ctx.body = Mock.mock({
+    'countries|4-6': [{
+      'id|+1': 1,
+      'area': '@integer(100)',
+      'country': '@ctitle(1, 3)' + '国',
+      'provinces|7-9': [{
+        'id|+1': 1,
+        'province': '@cword(2, 3)' + '省',
+        'cities|4-6': [{
+          'id|+1': 1,
+          'city': '@ctitle(2, 3)' + '市',
+          'peoples|5-15': [{
+            'id|+1': 1,
+            'guid': '@guid',
+            'name': '@cname',
+            'age': '@integer(20, 50)',
+            'birthday': '@date("MM-dd")',
+            'email': '@email',
+          }]
+        }]
+      }]
+    }]
+  });
+})
+
+
+router.post('/dataImage', async (ctx, next) => {
+  let str = ctx.header.str ? ctx.header.str : "Post"
+  let hight = ctx.header.hight ? ctx.header.hight : "500"
+  let width = ctx.header.width ? ctx.header.width : "500"
+  ctx.body = {
+    'data': Mock.Random.dataImage(width + 'x' + hight,  str)
   }
 })
 

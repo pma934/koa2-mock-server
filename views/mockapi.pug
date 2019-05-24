@@ -1,7 +1,77 @@
 extends layout
 
 block content
-  h1= title
+  - var mockapi= location + '/mockapi'
+  -
+    var getMap = [
+      {
+        url:'/star?min={min}&max={max}',
+        explain:'随机生成min~max颗星星',
+        example:'/star?min=5&max=10'
+      },
+      {
+        url:'/regexp?regexp={encodeURIComponent(regexp)}',
+        explain:'随机生成与正则表达式匹配的字符串',
+        example:'/regexp?regexp='+encodeURIComponent(/^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/)  
+      },
+      {
+        url:'/people',
+        explain:'随机生成500条人物数据',
+        example:'/people'
+      },
+      {
+        url:'/dataImage?amount={amount}',
+        explain:'随机生成若干条base64格式图片，amount∈[1,500]',
+        example:'/dataImage?amount=20'
+      },
+      {
+        url:'/image?amount={amount}',
+        explain:'随机生成若干条图片url，amount∈[1,5000]',
+        example:'/image?amount=2000'
+      },
+      {
+        url:'/basicData',
+        explain:'随机生成500条各种基础类型数据',
+        example:'/basicData'
+      },
+      {
+        url:'/complexData',
+        explain:'随机生成的复杂数据',
+        example:'/complexData'
+      },
+    ]
+  h1= location
   p Welcome to #{title}
-  button #{title}
-  a(class='button' href='users/bar') 百度
+  ul
+    each val in getMap
+      li.example
+        p.explain= val.explain
+        p.url
+          b GET&nbsp;&nbsp;
+          =val.url
+        a(href='/mockapi'+val.example)= mockapi+val.example
+
+  p.explain 根据传入的参数生成一张base64格式图片
+  p.url
+    b POST&nbsp;&nbsp;
+    | /dataImage
+
+  p(
+    class="codepen" 
+    data-height="265" 
+    data-theme-id="0" 
+    data-default-tab="js,result" 
+    data-user="pma934" 
+    data-slug-hash="GaQKRX" 
+    style=`
+      height: 265px; 
+      box-sizing: border-box; 
+      display: flex; 
+      align-items: center; 
+      justify-content: center; 
+      border: 2px solid; 
+      margin: 1em 0; 
+      padding: 1em;`
+    data-pen-title="主页面"
+    ) codepen加载失败 
+  
