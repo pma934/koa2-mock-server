@@ -14,6 +14,7 @@ router.get('/', async (ctx, next) => {
 
 //ctx.params 路由传值
 //ctx.query  参数传值
+//ctx.request.body Post参数
 
 //生成min-max颗星星，min默认为1，max默认为5
 router.get('/star', async (ctx, next) => {
@@ -40,97 +41,92 @@ router.get('/regexp', async (ctx, next) => {
   }
 })
 
+const mockPeople = Mock.mock({
+  'peoples|5000': [{
+    'id|+1': 1,
+    'guid': '@guid',
+    'name': '@cname',
+    'age': '@integer(20, 50)',
+    'birthday': '@date("MM-dd")',
+    'address': '@county(true)',
+    'email': '@email',
+  }]
+});
 router.get('/people', async (ctx, next) => {
-  ctx.body = Mock.mock({
-    'peoples|500': [{
-      'id|+1': 1,
-      'guid': '@guid',
-      'name': '@cname',
-      'age': '@integer(20, 50)',
-      'birthday': '@date("MM-dd")',
-      'address': '@county(true)',
-      'email': '@email',
-    }]
-  });
+  ctx.body = mockPeople
 })
 
-router.get('/dataImage', async (ctx, next) => {
-  let n = isNaN(Math.floor(ctx.query['amount'])) ? 20 : Math.floor(ctx.query['amount'])
-  n = Math.min(Math.max(1, n), 500)
-  ctx.body = {
-    "list": Array(n).fill().map((_, index) => {
-      return {
-        'id': index + 1,
-        'data': Mock.Random.dataImage()
-      }
-    })
-  }
-})
+const mockImage =  Mock.mock({
+  "images|5000": [{
+    'id|+1': 1,
+    'title': '@title',
+    'color': '@color',
+    'cga': '@image(cga,@color,eeeeee,@title)',
+    'vga': '@image(vga,@color,eeeeee,@title)',
+    'svga': '@image(svga,@color,eeeeee,@title)',
+    'wsvga': '@image(wsvga,@color,eeeeee,@title)',
+    'xga': '@image(xga,@color,eeeeee,@title)',
+    'wsxga': '@image(wsxga,@color,eeeeee,@title)',
+    'wuxga': '@image(wuxga,@color,eeeeee,@title)',
+  }]
+});
 
 router.get('/image', async (ctx, next) => {
-  let n = isNaN(Math.floor(ctx.query['amount'])) ? 2000 : Math.floor(ctx.query['amount'])
-  n = Math.min(Math.max(1, n), 5000)
-  ctx.body = {
-    "list": Array(n).fill().map((_, index) => {
-      return {
-        'id': index + 1,
-        'data': Mock.Random.image()
-      }
-    })
-  }
+  ctx.body = mockImage
 })
 
+const mockBasicData = Mock.mock({
+  'list|5000': [{
+    'id|+1': 1,
+    'isBoolean': '@boolean(10, 0, true)',
+    'naturalNumber': '@natural(1, 1000)',
+    'integer': '@integer(0)',
+    'float': '@float(1, 100, 3, 6)',
+    'character': '@character("upper")',
+    'string': '@string("lower", 5, 20)',
+    'range': '@range(1, 10, 2)',
+  }]
+});
 router.get('/basicData', async (ctx, next) => {
-  ctx.body = Mock.mock({
-    'list|500': [{
-      'id|+1': 1,
-      'isBoolean': '@boolean(10, 0, true)', //百分之百的true
-      'naturalNumber': '@natural(1, 1000)', //大于等于零的整数
-      'integer': '@integer(0)', //随机整数
-      'float': '@float(1, 100, 3, 6)', //随机浮点数, 
-      'character': '@character("upper")', //一个随机字符
-      'string': '@string("lower", 5, 20)', //一串随机字符串
-      'range': '@range(1, 10, 2)', //一个整形数组，步长为2
-    }]
-  });
+  ctx.body = mockBasicData
 })
 
-router.get('/complexData', async (ctx, next) => {
-  ctx.body = Mock.mock({
-    'countries|4-6': [{
+const mockComplexData = Mock.mock({
+  'countries|4-6': [{
+    'id|+1': 1,
+    'area': '@integer(100)',
+    'country': '@ctitle(1, 3)' + '国',
+    'provinces|7-9': [{
       'id|+1': 1,
-      'area': '@integer(100)',
-      'country': '@ctitle(1, 3)' + '国',
-      'provinces|7-9': [{
+      'province': '@cword(2, 3)' + '省',
+      'cities|4-6': [{
         'id|+1': 1,
-        'province': '@cword(2, 3)' + '省',
-        'cities|4-6': [{
+        'city': '@ctitle(2, 3)' + '市',
+        'peoples|5-15': [{
           'id|+1': 1,
-          'city': '@ctitle(2, 3)' + '市',
-          'peoples|5-15': [{
-            'id|+1': 1,
-            'guid': '@guid',
-            'name': '@cname',
-            'age': '@integer(20, 50)',
-            'birthday': '@date("MM-dd")',
-            'email': '@email',
-          }]
+          'guid': '@guid',
+          'name': '@cname',
+          'age': '@integer(20, 50)',
+          'birthday': '@date("MM-dd")',
+          'email': '@email',
         }]
       }]
     }]
-  });
+  }]
+});
+router.get('/complexData', async (ctx, next) => {
+  ctx.body = mockComplexData
 })
 
-router.post('/image', async (ctx, next) => {
+router.post('/customImage', async (ctx, next) => {
   let postData = ctx.request.body
-  console.log(postData)
   let str = postData.str ? postData.str : "content"
   let height = postData.height ? postData.height : "500"
   let width = postData.width ? postData.width : "500"
   let bgc = postData.bgc ? postData.bgc : "#eee"
   let color = postData.color ? postData.color : "000"
   ctx.body = {
-    'data': Mock.Random.image(width + 'x' + height, bgc,color, str)
+    'data': Mock.Random.image(width + 'x' + height, bgc, color, str)
   }
 })
 

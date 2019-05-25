@@ -16,18 +16,13 @@ block content
       },
       {
         url:'/people',
-        explain:'随机生成500条人物数据',
+        explain:'5000条人物数据',
         example:'/people'
       },
       {
-        url:'/dataImage?amount={amount}',
-        explain:'随机生成若干条base64格式图片，amount∈[1,500]',
-        example:'/dataImage?amount=20'
-      },
-      {
-        url:'/image?amount={amount}',
-        explain:'随机生成若干条图片url，amount∈[1,5000]',
-        example:'/image?amount=2000'
+        url:'/image',
+        explain:'5000张多尺寸图片URL',
+        example:'/image'
       },
       {
         url:'/basicData',
@@ -54,7 +49,7 @@ block content
   p.explain 根据传入的参数生成一张图片
   p.url
     b POST&nbsp;&nbsp;
-    | /image
+    | /customImage
 
   p(
     class="codepen" 
