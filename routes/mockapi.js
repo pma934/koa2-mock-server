@@ -16,31 +16,7 @@ router.get('/', async (ctx, next) => {
 //ctx.query  参数传值
 //ctx.request.body Post参数
 
-//生成min-max颗星星，min默认为1，max默认为5
-router.get('/star', async (ctx, next) => {
-  let min = ctx.query.min ? +ctx.query.min : 1
-  let max = ctx.query.max ? +ctx.query.max : 5
-  let r = Math.abs(Math.round(Math.random() * (max - min) + min))
-  ctx.body = {
-    "star": Array(r).fill("★").join("")
-  }
-})
-
-//生成regexp
-router.get('/regexp', async (ctx, next) => {
-  let regstr = ctx.query['regexp']
-  if (regstr === undefined) {
-    await ctx.response.redirect('/mockapi/regexp?regexp=');
-  } else {
-    regstr = regstr.match(/^\/(.*)\/([igm]?)$/)
-    ctx.body = regstr ? Mock.mock({
-      'regexp': RegExp(regstr[1], regstr[2])
-    }) : {
-      'regexp': '请输入正确的正则表达式'
-    }
-  }
-})
-
+//people
 const mockPeople = Mock.mock({
   'peoples|5000': [{
     'id|+1': 1,
@@ -53,9 +29,13 @@ const mockPeople = Mock.mock({
   }]
 });
 router.get('/people', async (ctx, next) => {
-  ctx.body = mockPeople
+  ctx.body = ctx.query['id']?mockPeople['peoples'][ctx.query['id']-1]:mockPeople['peoples']
+})
+router.get('/people/:id', async (ctx, next) => {
+  ctx.body = mockPeople['peoples'][ctx.params['id']-1]
 })
 
+//image
 const mockImage =  Mock.mock({
   "images|5000": [{
     'id|+1': 1,
@@ -72,9 +52,13 @@ const mockImage =  Mock.mock({
 });
 
 router.get('/image', async (ctx, next) => {
-  ctx.body = mockImage
+  ctx.body = ctx.query['id']?mockImage['images'][ctx.query['id']-1]:mockImage['images']
+})
+router.get('/image/:id', async (ctx, next) => {
+  ctx.body = mockImage['images'][ctx.params['id']-1]
 })
 
+//BasicData
 const mockBasicData = Mock.mock({
   'list|5000': [{
     'id|+1': 1,
@@ -88,7 +72,10 @@ const mockBasicData = Mock.mock({
   }]
 });
 router.get('/basicData', async (ctx, next) => {
-  ctx.body = mockBasicData
+  ctx.body = mockBasicData['list']
+})
+router.get('/basicData/:id', async (ctx, next) => {
+  ctx.body = mockBasicData['list'][ctx.params['id']-1]
 })
 
 const mockComplexData = Mock.mock({

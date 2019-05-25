@@ -1,26 +1,52 @@
-body {
-  padding: 50px;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+.head {
+  padding: 3rem 0 1rem 0;
+  text-align: center;
+  max-width: 40rem;
+  margin: auto;
 }
 
-a {
+.head .title {
+  margin: 0;
+  font-size: 4rem;
+  letter-spacing: 0.05em;
+}
+
+.head .subtitle {
+  font-weight: 300;
+  line-height: 1.6rem;
+}
+
+hr {
+  border-width: .5px;
+}
+
+.content {
+  max-width: 40rem;
+  margin: auto;
+}
+
+.content .subtitle {
+  margin-left: 2rem;
+  font-weight: 300;
+  margin-block-end: .2rem;
+}
+
+.item {
+  margin-left: 2rem;
+  font-weight: 300;
+  margin-bottom: 1.5rem;
+}
+
+.item a {
   color: #1e87f0;
   text-decoration: none;
   border-bottom: 1px solid transparent;
-  font-size:1.2em;
 }
 
-a:hover {
+.item a:hover {
   text-decoration: underline;
 }
 
-p.url{
-  font-size: 1.25em;
-  margin: .25em 0;
-}
-
-p.explain{
-  font-weight: 600;
-  font-size: 1.25em;
-  margin: 1em 0 0;
+td:first-child {
+  width: 8rem;
 }

@@ -5,67 +5,85 @@ block content
   -
     var getMap = [
       {
-        url:'/star?min={min}&max={max}',
-        explain:'随机生成min~max颗星星',
-        example:'/star?min=5&max=10'
+        title:'/people',
+        items:[
+          {
+            explain:'Mosk生成的5000条人物数据',
+            example:'/people'
+          },
+          {
+            explain:'获得指定id的人物数据',
+            example:'/people/1'
+          },
+          {
+            explain:'获得指定id的人物数据',
+            example:'/people?id=1'
+          }
+        ]  
       },
       {
-        url:'/regexp?regexp={encodeURIComponent(regexp)}',
-        explain:'随机生成与正则表达式匹配的字符串',
-        example:'/regexp?regexp='+encodeURIComponent(/^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/)  
+        title:'/image',
+        items:[
+          {
+            explain:'Mosk生成的5000张多尺寸图片URL',
+            example:'/image'
+          },
+          {
+            explain:'获得指定id的图片URL',
+            example:'/image/1'
+          },
+          {
+            explain:'获得指定id的图片URL',
+            example:'/image?id=1'
+          }
+        ]
       },
       {
-        url:'/people',
-        explain:'5000条人物数据',
-        example:'/people'
+        title:'/basicData',
+        items:[
+          {
+            explain:'Mosk生成的500条各种基础类型数据',
+            example:'/basicData'
+          },
+          {
+            explain:'获得指定id的数据',
+            example:'/basicData/1'
+          },
+          {
+            explain:'获得指定id的数据',
+            example:'/basicData?id=1'
+          }
+        ]
       },
       {
-        url:'/image',
-        explain:'5000张多尺寸图片URL',
-        example:'/image'
-      },
-      {
-        url:'/basicData',
-        explain:'随机生成500条各种基础类型数据',
-        example:'/basicData'
-      },
-      {
-        url:'/complexData',
-        explain:'随机生成的复杂数据',
-        example:'/complexData'
+        title:'/complexData',
+        items:[
+          {
+            explain:'Mosk生成的复杂数据',
+            example:'/complexData'
+          }
+        ]
       },
     ]
-  h1= location
-  p Welcome to #{title}
-  ul
-    each val in getMap
-      li.example
-        p.explain= val.explain
-        p.url
-          b GET&nbsp;&nbsp;
-          =val.url
-        a(href='/mockapi'+val.example)= mockapi+val.example
+  div.head
+    h1.title Mock Server
+    p.subtitle 一个基于Koa2搭建的一个虚拟数据Server，虽然Mockjs能直接拦截Ajax，但是那样做的话，数据并不会经过Network，感觉不能很好的模拟GET&POST请求。
+  hr
+  div.content
+    h1.title GET
+    each get in getMap
+      p.subtitle
+        b GET&nbsp;&nbsp;
+        =get.title
+        table.item
+          each item in get.items       
+            tr
+              td
+                a(href='/mockapi'+item.example)= item.example  
+              td
+                span= item.explain
 
-  p.explain 根据传入的参数生成一张图片
-  p.url
-    b POST&nbsp;&nbsp;
-    | /customImage
-
-  p(
-    class="codepen" 
-    data-height="510" 
-    data-theme-id="0" 
-    data-default-tab="js,result" 
-    data-user="pma934" 
-    data-slug-hash="NVYjVW" 
-    style=`
-      height: 265px; 
-      box-sizing: border-box; 
-      display: flex; 
-      align-items: center; 
-      justify-content: center; 
-      border: 2px solid; 
-      margin: 1em 0; 
-      padding: 1em;`
-    data-pen-title="主页面"
-    ) codepen加载失败 
+  //- p.explain 根据传入的参数生成一张图片
+  //- p.url
+  //-   b POST&nbsp;&nbsp;
+  //-   | /customImage
