@@ -122,13 +122,15 @@ router.get('/complexData', async (ctx, next) => {
 })
 
 router.post('/image', async (ctx, next) => {
-  let str = ctx.header.str ? ctx.header.str : "Post"
-  let hight = ctx.header.hight ? ctx.header.hight : "500"
-  let width = ctx.header.width ? ctx.header.width : "500"
-  let bgc = ctx.header.bgc ? ctx.header.bgc : "#eee"
-  let color = ctx.header.color ? ctx.header.color : "000"
+  let postData = ctx.request.body
+  console.log(postData)
+  let str = postData.str ? postData.str : "content"
+  let height = postData.height ? postData.height : "500"
+  let width = postData.width ? postData.width : "500"
+  let bgc = postData.bgc ? postData.bgc : "#eee"
+  let color = postData.color ? postData.color : "000"
   ctx.body = {
-    'data': Mock.Random.image(width + 'x' + hight, bgc,color, str)
+    'data': Mock.Random.image(width + 'x' + height, bgc,color, str)
   }
 })
 
