@@ -1,5 +1,8 @@
 extends layout
 
+block append head
+  link(rel="stylesheet", href="/stylesheets/wangImgEnlarge.css")
+
 block content
   - var mockapi= location + '/mockapi'
   -
@@ -52,6 +55,10 @@ block content
           {
             explain:'获得指定id的数据',
             example:'/basicData?id=1'
+          },
+          {
+            explain:'获得character为指定值的所有数据',
+            example:'/basicData?character=A'
           }
         ]
       },
@@ -65,9 +72,38 @@ block content
         ]
       },
     ]
+  -
+    var postMap = [
+      {
+        title:'/customImage',
+        explain:'根据发送的参数，返回指定的图片URL',
+        parameter:[
+          {
+            name:'str',
+            description:'图片的上的文字',
+          },
+          {
+            name:'height',
+            description:'图片的高',
+          },
+          {
+            name:'width',
+            description:'图片的宽',
+          },
+          {
+            name:'bgc',
+            description:'图片的背景颜色',
+          },
+          {
+            name:'color',
+            description:'图片的文字颜色',
+          }
+        ]
+      }
+    ]
   div.head
-    h1.title Mock Server
-    p.subtitle 一个基于Koa2搭建的一个虚拟数据Server，虽然Mockjs能直接拦截Ajax，但是那样做的话，数据并不会经过Network，感觉不能很好的模拟GET&POST请求。
+    h1.title Mock API
+    p.subtitle 一个基于Koa2搭建的一个虚拟数据API，虽然Mockjs能直接拦截Ajax，但是那样做的话，数据并不会经过Network，感觉不能很好的模拟GET&POST请求。
   hr
   div.content
     h1.title GET
@@ -77,13 +113,49 @@ block content
         =get.title
         table.item
           each item in get.items       
-            tr
+            tr.getMap
               td
                 a(href='/mockapi'+item.example)= item.example  
               td
                 span= item.explain
-
-  //- p.explain 根据传入的参数生成一张图片
-  //- p.url
-  //-   b POST&nbsp;&nbsp;
-  //-   | /customImage
+  hr
+  div.content
+    h1.title POST
+    each post in postMap
+      p.subtitle
+        b POST&nbsp;&nbsp;
+        =post.title
+        p.subtitle= post.explain
+        p.subtitle 
+          b 参数
+        table#tab02.subtitle
+          tr
+            th Name
+            th Type
+            th Description
+          each item in post.parameter
+            tr
+              td= item.name
+              td string
+              td= item.description
+    div.subtitle  
+      b 示例 
+      img(src="/images/example.png" style="max-width: 40rem;")     
+  
+  script(src="/javascript/jquery.min.js")
+  script(src="/javascript/wangImgEnlarge.js")
+    //- code
+    //-   p $.ajax({
+    //-   p &nbsp;&nbsp;url: "http://120.77.47.245:3333/mockapi/image",
+    //-   p &nbsp;&nbsp;type: "post",
+    //-   p &nbsp;&nbsp;data: {
+    //-   p &nbsp;&nbsp;&nbsp;&nbsp;str: "post",
+    //-   p &nbsp;&nbsp;&nbsp;&nbsp;height: "post",
+    //-   p &nbsp;&nbsp;&nbsp;&nbsp;width: "post",
+    //-   p &nbsp;&nbsp;&nbsp;&nbsp;bgc: "#eee",
+    //-   p &nbsp;&nbsp;&nbsp;&nbsp;color: "#333"
+    //-   p &nbsp;&nbsp;},
+    //-   p &nbsp;&nbsp;success: function(res) {
+    //-   p &nbsp;&nbsp;&nbsp;&nbsp;console.log(res);
+    //-   p &nbsp;&nbsp;}
+    //-   p });

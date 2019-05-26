@@ -29,14 +29,14 @@ const mockPeople = Mock.mock({
   }]
 });
 router.get('/people', async (ctx, next) => {
-  ctx.body = ctx.query['id']?mockPeople['peoples'][ctx.query['id']-1]:mockPeople['peoples']
+  ctx.body = ctx.query['id'] ? mockPeople['peoples'][ctx.query['id'] - 1] : mockPeople['peoples']
 })
 router.get('/people/:id', async (ctx, next) => {
-  ctx.body = mockPeople['peoples'][ctx.params['id']-1]
+  ctx.body = mockPeople['peoples'][ctx.params['id'] - 1]
 })
 
 //image
-const mockImage =  Mock.mock({
+const mockImage = Mock.mock({
   "images|5000": [{
     'id|+1': 1,
     'title': '@title',
@@ -52,10 +52,10 @@ const mockImage =  Mock.mock({
 });
 
 router.get('/image', async (ctx, next) => {
-  ctx.body = ctx.query['id']?mockImage['images'][ctx.query['id']-1]:mockImage['images']
+  ctx.body = ctx.query['id'] ? mockImage['images'][ctx.query['id'] - 1] : mockImage['images']
 })
 router.get('/image/:id', async (ctx, next) => {
-  ctx.body = mockImage['images'][ctx.params['id']-1]
+  ctx.body = mockImage['images'][ctx.params['id'] - 1]
 })
 
 //BasicData
@@ -72,22 +72,28 @@ const mockBasicData = Mock.mock({
   }]
 });
 router.get('/basicData', async (ctx, next) => {
-  ctx.body = mockBasicData['list']
+  if (ctx.query['id']) {
+    ctx.body = mockBasicData['list'][ctx.query['id'] - 1]
+  } else if (ctx.query['character']) {
+    ctx.body = mockBasicData['list'].filter(x => x['character'] == ctx.query['character'])
+  } else {
+    ctx.body = mockBasicData['list']
+  }
 })
 router.get('/basicData/:id', async (ctx, next) => {
-  ctx.body = mockBasicData['list'][ctx.params['id']-1]
+  ctx.body = mockBasicData['list'][ctx.params['id'] - 1]
 })
 
 const mockComplexData = Mock.mock({
   'countries|4-6': [{
-    'id|+1': 1,
+    'countryId|+1': 1,
     'area': '@integer(100)',
     'country': '@ctitle(1, 3)' + '国',
     'provinces|7-9': [{
-      'id|+1': 1,
+      'provinceId|+1': 1,
       'province': '@cword(2, 3)' + '省',
       'cities|4-6': [{
-        'id|+1': 1,
+        'cityId|+1': 1,
         'city': '@ctitle(2, 3)' + '市',
         'peoples|5-15': [{
           'id|+1': 1,
